@@ -1,17 +1,17 @@
-package repositories;
+package repository;
 
 import entities.TodoList;
 
-public class TodoListRepositoryImp implements TodoListRepository{
+public class TodoListRepositoryImpl implements  TodoListRepository {
     public static TodoList[] todos = new TodoList[10];
 
     @Override
-    public TodoList[] getAll() {
+    public TodoList[] getALL() {
         return todos;
     }
 
     @Override
-    public void add(TodoList todoList) {
+    public void add(final TodoList todoList) {
         resizeArrayIfFull();
 
         // add todo to array that has null element
@@ -22,6 +22,7 @@ public class TodoListRepositoryImp implements TodoListRepository{
             }
         }
     }
+
     private static void resizeArrayIfFull() {
         // cek whether todos is full
         Boolean isFull = true;
@@ -51,8 +52,9 @@ public class TodoListRepositoryImp implements TodoListRepository{
         return isFull;
     }
 
+
     @Override
-    public Boolean remove(final Integer number) {
+    public Boolean remove( final Integer number) {
         if (isSelectedTodoNotValid(number)) {
             return false;
         }
@@ -69,8 +71,31 @@ public class TodoListRepositoryImp implements TodoListRepository{
         return true;
     }
 
+    private static boolean isSelectedTodoNotValid(final Integer number) {
+        // cek if the number is zero or less than zero
+        if (number <= 0) {
+            return true;
+        }
+
+        // check if the number is greater than the todos size/length
+        if (number - 1 > todos.length - 1) {
+            return true;
+        }
+
+        // check whether the element is already null
+        if (todos[number - 1] == null) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Boolean edit(final TodoList todoList) {
-        return null;
+        if (isSelectedTodoNotValid(todoList.getId())) {
+            return false;
+        }
+        todos[todoList.getId() - 1] = todoList;
+        return true;
     }
+
 }
